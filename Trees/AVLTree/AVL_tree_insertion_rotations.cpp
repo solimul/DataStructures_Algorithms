@@ -47,23 +47,12 @@ class AVLTree
                 return node->height;
         }
         
-        int max(int x, int y)
+        inline int max(int x, int y)
         {
             return x>y?x:y;
         }
         
          
-    void find_element(int item)
-    {
-        BinaryTreeNode* node = find_item(root, item);
-        if(node==NULL)
-            cout<<item<<" is not in the BST\n";
-        else
-            if (node->parent != NULL)
-                cout<<node->data<<" is on the BST with parent "<<node->parent->data<<".\n";
-            else
-                cout<<node->data<<" is at the root of the BST.\n";
-    }
     
     void inorder(BinaryTreeNode *rt)
     {
@@ -248,5 +237,4 @@ int main()
     // avlt.sort_data();
     return 0;
 }
-
 
