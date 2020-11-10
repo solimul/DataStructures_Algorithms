@@ -146,4 +146,3 @@ int main ()
     graph.compute_distance(1);
     return 0;
 }
-
