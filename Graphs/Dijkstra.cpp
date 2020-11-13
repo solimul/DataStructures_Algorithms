@@ -1,6 +1,7 @@
 
 
 #include <iostream>
+#include<vector>
 #include<climits>
 using namespace std;
 
@@ -15,7 +16,9 @@ class Graph
     };
     
     int * distance;
+    int * path;
     bool *visited;
+    int source;
     GraphMatrix *gm;
     
     Graph()
@@ -41,6 +44,7 @@ class Graph
         }
         distance = new int [gm->num_vertices];
         visited = new bool [gm->num_vertices];
+        path = new int [gm->num_vertices];
     }
     
     
@@ -90,8 +94,9 @@ class Graph
         return min_idx;
     }
     
-    void dijkstra_shorted_distance(int source)
+    void dijkstra_shorted_distance(int src)
     {
+        source = src;
         for(int i=0; i< gm->num_vertices;i++)
         {
             distance[i] = INT_MAX;
@@ -112,6 +117,7 @@ class Graph
                     )
                     {
                         distance[v] = gm->matrix[u][v] + distance[u];
+                        path[v] =u;
                         //if(visited[v]) visited[v] = false; //For negative weight .. Bellman-Ford
                     }
             }
@@ -120,6 +126,33 @@ class Graph
         for(int i=0;i<gm->num_vertices;i++)
             cout<<"\nSource "<< source+1 << " to vertex "<<i+1<<" is: "<<distance[i];
     }
+    
+    void print_path_from_source(int destination)
+    {
+        int temp=destination;
+        vector<int> constructed_path;
+        do
+        {
+            constructed_path.push_back(temp);
+            temp=path[temp];
+        } while(temp!=source);
+        
+        constructed_path.push_back(source);
+        cout<<"\nPath from "<<source+1<<" to "<<destination+1<<": ";
+        for(int i = constructed_path.size()-1; i>=0; i--)
+            cout<<constructed_path[i]+1<<"-";
+    }
+    
+    void print_path()
+    {
+        cout<<"\n";
+        for(int i=0;i<gm->num_vertices;i++)
+        {
+            if(i!=source)
+                print_path_from_source(i);
+        }
+    }
+    
 };
 
 int main ()
@@ -128,5 +161,6 @@ int main ()
     graph.build_graph_from_user_input();
     graph.print_graph();
     graph.dijkstra_shorted_distance(0);
+    graph.print_path();
     return 0;
 }
