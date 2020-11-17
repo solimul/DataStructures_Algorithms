@@ -10,11 +10,11 @@ class LinkedList
         struct ListNode *next;
     };
     
-    ListNode **head;
+    ListNode *head;
     public:
     LinkedList()
     {
-        *head=NULL;    
+        head=NULL;    
     }
     void insert_item(int data, int position);
     void delete_item(int position);
@@ -25,14 +25,14 @@ void LinkedList::delete_item(int position)
 {
     ListNode *p,*prev;
     int pos_count=1;
-    p=*head;
+    p=head;
     if(position==1)
     {
-        *head=(*head)->next;
+        head=head->next;
         free(p);
         return;
     }
-    while(p!=NULL && pos_count<position)
+    while(pos_count<position)
     {
         pos_count++;
         prev=p;
@@ -49,7 +49,7 @@ void LinkedList::print_list()
 {
     std::cout<<"\n*********\n";
     ListNode *p;
-    p=*head;
+    p=head;
     while(p!=NULL)
     {
         std::cout<<p->data<<"\n";
@@ -65,16 +65,16 @@ void LinkedList::insert_item(int data, int position)
     ListNode *p,*q, *new_node;
     new_node=new ListNode();
     new_node->data = data;
-    p=*head;
+    p=head;
      
     if(position==1) // insert in the first position
     {
         new_node->next=p;
-        *head=new_node;
+        head=new_node;
     }
     else
     { // else traverse the list to find a position.
-        while ((p!=NULL) && (pos_counter<position))
+        while (pos_counter<position)
         {
             pos_counter++;
             q=p;
