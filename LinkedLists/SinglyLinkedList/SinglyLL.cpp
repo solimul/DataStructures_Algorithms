@@ -84,7 +84,6 @@ void LinkedList::insert_item(int data, int position)
         q->next=new_node;
         new_node->next=p;
     }
-    
 }
 
 int main()

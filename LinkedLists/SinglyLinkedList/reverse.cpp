@@ -67,8 +67,10 @@ class LinkedList
         while(current!=NULL)
         {
             // Traverse the whole ListNode
-            // reverse the pointer direction 
-            forward=forward->next;
+            // reverse the pointer direction
+            forward=forward->next; // In the first call, both forward and current points to 'head' and previous points to NULL. 
+                                   // if forward=forward->next is placed in the next or next to next line then forward->next (or head->next) would point to 
+                                   // previous (or NULL), due to the assignment current->next=previous and the whole linked list will be broken.
             current->next=previous;
             previous=current;
             current=forward;
@@ -158,10 +160,10 @@ int main()
   ls.insert_item(1,5);
   ls.insert_item(8,6);
   ls.print_list();
-  ls.reverse(1, 4);
+  ls.reverse_whole();
+  //ls.reverse(1, 4);
   //ls.delete_item(5);
   //std::cout<<"=\n";
   ls.print_list();
 }
-
 
