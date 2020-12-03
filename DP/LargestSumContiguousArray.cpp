@@ -1,167 +1,63 @@
-#include <iostream>
-#include <string>
+#include<iostream>
+#include<vector>
+#include<cstring>
+#include<climits>
+using namespace std;
 
-class LinkedList
-{
-      
-    struct ListNode
-    {
-        int data;
-        struct ListNode *next;
-    };
-    
-    ListNode *head;
+
+class LSCA // Largest Sum Contiguous Subarray
+{   
+    int data [8] =   {-2, -3, 4, -1, -2, 1, 5, -3};
+    int data_all_neg [8] =   {-25, -24 , -4, -2, -4, -5, -6, -3};
     public:
-    LinkedList()
-    {
-        head=NULL;    
-    }
-    void insert_item(int data, int position);
-    void delete_item(int position);
-    void print_list();
-    void reverse_indexed(ListNode *start_prev, ListNode* end_prev)
-    {
-        
-        ListNode *start = start_prev->next, *end = end_prev->next;
-        ListNode *previous = NULL, * current = start, *forward = start;
-        //end->next=NULL;
-        while(current!=NULL)
+        int kadane() // Requires at least one positive number in the data
         {
-            forward=forward->next;
-            current->next=previous;
-            previous=current;
-            //std::cout<<"|"<<current->next->data;
-            current=forward;
+            int max_so_far=0, sum_upto_this=0;
+            int first_ind=-1, last_ind=-1;
+            for(int i=0;i<8;i++)
+            {
+                sum_upto_this+=data[i];
+                if(first_ind==-1) // Set first_ind to i, it will be reset to -1 if sum_upto_this becomes negative.
+                    first_ind = i;
+                if(max_so_far<sum_upto_this)
+                {
+                    max_so_far=sum_upto_this;
+                    last_ind = i; // last index for which sum_upto_this replaces max_so_far
+                }
+                if(sum_upto_this<0) // whenever sum_upto_this goes below 0, restore sum_upto_this to 0 and we reset the sub-sequence.
+                {
+                    sum_upto_this=0;
+                    first_ind = -1;
+                    last_ind = -1;
+                }
+            }
+            cout<<first_ind<<" "<<last_ind<<"\n";
+            return max_so_far;
         }
-        start_prev->next = previous;
-        //std::cout<<"\n";
-    }
-    
-    void reverse(int m, int n)
-    {
-        ListNode *p=head;
-        ListNode *start, *end;
-        
-        int i=0, j=0;
-        while(i<n)
-        {
-            if(i==m-1) 
-                start=p;
-            if(i==n-1)
-                end=p;
-            p=p->next;
-            i++;
-        }
-        ListNode * temp1 = end->next->next;
-        ListNode * temp2 = start->next->next;
-        end->next->next = NULL;
-        //start=NULL;
-        reverse_indexed(start,end);
-        end->next->next = temp1;
-        //start->next = temp2;
-    }
-    
-    void reverse_whole()
-    {
-        ListNode *current=head, *forward = head , *previous=NULL;
-        while(current!=NULL)
-        {
-            // Traverse the whole ListNode
-            // reverse the pointer direction 
-            forward=forward->next;
-            current->next=previous;
-            previous=current;
-            current=forward;
-        }
-        head=previous;
-    }
 
+        int lsca_all_negative() // It will essentially to find the max elemnt (hence sub-sequence is singleton) in data. 
+        {
+            int max_so_far=-INT_MAX, sum_upto_this=0;
+            int first_ind=-1, last_ind=-1;
+            for(int i=0;i<8;i++)
+            {
+                sum_upto_this+=data_all_neg[i];
+
+                if(sum_upto_this<data_all_neg[i])
+                {
+                    sum_upto_this=data_all_neg[i];
+                    if(max_so_far < sum_upto_this)
+                        max_so_far = sum_upto_this;
+                }
+            }
+            return max_so_far;
+        }
 };
 
-void LinkedList::delete_item(int position)
+
+int main ()
 {
-    ListNode *p,*prev;
-    int pos_count=1;
-    p=head;
-    if(position==1)
-    {
-        head=head->next;
-        free(p);
-        return;
-    }
-    while(pos_count<position)
-    {
-        pos_count++;
-        prev=p;
-        p=p->next;
-    }
-    if(p!=NULL)
-    {
-        prev->next=p->next;
-        free(p);
-    }
+    LSCA lsca;
+    cout<<lsca.kadane();
+    return 0;
 }
-
-void LinkedList::print_list()
-{
-    std::cout<<"\n*********\n";
-    ListNode *p;
-    p=head;
-    int i=0;
-    while(p!=NULL)
-    {
-        std::cout<<p->data<<" ";
-        p=p->next;
-        if(i>6)
-            break;
-        i++;
-    }
-    std::cout<<"\n";
-}
-
-void LinkedList::insert_item(int data, int position)
-{
-    //print();
-    int pos_counter=1;
-    ListNode *p,*q, *new_node;
-    new_node=new ListNode();
-    new_node->data = data;
-    p=head;
-     
-    if(position==1) // insert in the first position
-    {
-        new_node->next=p;
-        head=new_node;
-    }
-    else
-    { // else traverse the list to find a position.
-        while (pos_counter<position)
-        {
-            pos_counter++;
-            q=p;
-            p=p->next;
-        }
-
-        q->next=new_node;
-        new_node->next=p;
-    }
-    
-}
-
-int main()
-{
-  LinkedList ls; 
-  ls.insert_item(5,1);
-  ls.insert_item(4,2);
-  ls.insert_item(3,3);
-  ls.insert_item(2,4);
-  ls.insert_item(1,5);
-  ls.insert_item(8,6);
-  ls.print_list();
-  ls.reverse(1, 4);
-  //ls.delete_item(5);
-  //std::cout<<"=\n";
-  ls.print_list();
-}
-
-
